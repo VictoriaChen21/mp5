@@ -1,0 +1,16 @@
+---
+title: "sds192-mp5"
+output:
+  github_document:
+    html_preview: false
+---
+
+Mini-project 5:
+
+See (https://beanumber.github.io/sds192/mod_sql.html) for the project instructions
+
+
+```{r, eval=TRUE, message=FALSE}
+library(tidyverse)
+library(RMySQL)
+```

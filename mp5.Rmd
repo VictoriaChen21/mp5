@@ -1,0 +1,138 @@
+---
+title: "Put a real title here"
+subtitle: "SDS 192: MP5"
+author: 
+- name: Author One
+  affiliation: Smith College
+- name: Author Two
+  affiliation: Smith College
+date: "`r format(Sys.Date(), '%B %e, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    code_folding: show
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+references:
+- id: xie2016bookdown
+  type: book
+  title: "Bookdown: Authoring books and technical documents with R markdown"
+  author: 
+  - family: Xie
+    given: Yihui
+  issued:
+    year: 2016
+  publisher: CRC Press
+  url: https://bookdown.org/yihui/rmarkdown/
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(sds192)
+library(RMySQL)
+db <- dbConnect(
+  MySQL(), 
+  host = "scidb.smith.edu", 
+  user = "sds192", 
+  password = "DSismfc@S", 
+  dbname = "airlines"
+)
+knitr::opts_chunk$set(
+  message = FALSE,
+  echo = TRUE, 
+  connection = db, 
+  max.print = 20
+)
+```
+
+
+## Introduction
+
+What is this article about? [^github]
+
+[^github]: Please see [our GitHub repository](https://github.com/sds192-s20/mp3-group-*) for complete code. 
+
+## Exploratory data analysis
+
+Make sure that you can get this chunk to run:
+
+```{sql}
+SHOW DATABASES;
+```
+
+Note how the chunk has the engine type `sql` instead of `r`. 
+Note always how the results come directly back into R and show up in the HTML output. 
+
+If you want to save the results of your query as a data frame, so that you can use it in any later R chunks, add the `connection` and `output.var` chunk options, like this:
+
+```{sql, connection=db, output.var="first_ten_airports"}
+SELECT * FROM airports LIMIT 10;
+```
+
+Now we have this object in R:
+
+```{r}
+first_ten_airports
+```
+
+Please see the [SQL chapter of the `bookdown` book](
+https://rmarkdown.rstudio.com/authoring_knitr_engines.html%23sql#sql) for more information. 
+
+You can cite references using parentheses or not. @xie2016bookdown wrote about this. See also [@xie2016bookdown].
+
+```{r airport-map, fig.cap="Map of the first ten airports."}
+library(leaflet)
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(
+    data = first_ten_airports,
+    popup = ~name
+  )
+```
+
+
+## Query magic
+
+```{r}
+flights <- tbl(db, "flights")
+```
+
+
+
+
+
+## Analysis
+
+What did you discover? 
+
+## Conclusion
+
+What did you *learn* about the data set you explored?  
+
+---
+
+## Word count
+
+```{r word_count, message=FALSE, echo=FALSE}
+sds192::text_stats()
+```
+
+
+## Standards
+
+In this assignment, we attempted the following [standards](https://beanumber.github.io/sds192/standards.html):
+
+- `r standard_button("query")`: We met the Query standard because we...
+- `r standard_button("spatial")`: We met the Spatial standard because we...
+- `r standard_button("leaflet")`: We met the Leaflet standard because we...
+- `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we...
+- `r standard_button("markdown")`: We mastered the R Markdown standard because we...
+
+## References
